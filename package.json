@@ -2,7 +2,7 @@
   "name": "veracode-app",
   "version": "1.0.0",
   "private": true,
-  "description": "A github application to interact with the the Veracode Platform.",
+  "description": "A github application to interact with the Veracode Platform.",
   "author": "Yaakov Lerer <coby_lerer@hotmail.com>",
   "license": "ISC",
   "repository": "https://github.com/Lerer/veracode-app.git",

@@ -1,6 +1,6 @@
 # veracode-app
 
-> A GitHub App built with [Probot](https://github.com/probot/probot) that A github application to interact with the the Veracode Platform.
+> A GitHub App built with [Probot](https://github.com/probot/probot) that A github application to interact with the Veracode Platform.
 
 ## Setup
 
