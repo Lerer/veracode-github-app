@@ -1,6 +1,6 @@
-const veracode_api = require('./veracode/query.js');
+const veracodeApi = require('./veracode/query.js')
 
-const SCAN_NAME = "Veracode SAST";
+const SCAN_NAME = 'Veracode SAST'
 
 /**
  * This is the main entrypoint to your Probot app
@@ -10,10 +10,10 @@ module.exports = app => {
   // Your code here
   app.log('Yay, the app was loaded!')
 
-  app.on(['pull_request.edited','pull_request.opened','pull_request.synchronize'], async context => {
-    context.log({ event: context.event, action: context.payload.action });
-    //context.log({ "context name": context.name });
-    //context.log({ pull_request: context.payload.pull_request });
+  app.on(['pull_request.edited', 'pull_request.opened', 'pull_request.synchronize'], async context => {
+    context.log({ event: context.event, action: context.payload.action })
+    // context.log({ "context name": context.name });
+    // context.log({ pull_request: context.payload.pull_request });
     /*
     const number = context.payload.pull_request.number;
     const {owner,repo} = context.repo();
@@ -34,7 +34,6 @@ module.exports = app => {
       console.log('suite pulls:\n'+JSON.stringify(suite.pull_requests));
     })
 
-
     console.log('\nchecks run data');
     let checks = await context.github.checks.listForRef({
       owner:owner,
@@ -51,25 +50,23 @@ module.exports = app => {
     })
 
     */
-  });
+  })
 
-  app.on(['check_suite.requested','check_suite.rerequested'], async context => {
-    create_check_run(context);
-  });
+  app.on(['check_suite.requested', 'check_suite.rerequested'], async context => {
+    createCheckRun(context)
+  })
 
-  app.on(['check_run.created','check_run.rerequested'], async context => {
-    const action = context.payload.action;
-    if (action==='created') {
-      initiate_check_run(context);
+  app.on(['check_run.created', 'check_run.rerequested'], async context => {
+    const action = context.payload.action
+    if (action === 'created') {
+      initiateCheckRun(context)
     } else {
       context.github.checks.update({
         name
-      });
-      create_check_run(context);
+      })
+      createCheckRun(context)
     }
-  });
-
-
+  })
 
   // For more information on building apps:
   // https://probot.github.io/docs/
@@ -78,12 +75,12 @@ module.exports = app => {
   // https://probot.github.io/docs/development/
 }
 
-create_check_run = (context) => {
-  context.log({ event: context.event, action: context.payload.action });
-  context.log({ "context name": context.name });
-  context.log({ payload: context.payload });
+const createCheckRun = (context) => {
+  context.log({ event: context.event, action: context.payload.action })
+  context.log({ 'context name': context.name })
+  context.log({ payload: context.payload })
 
-  const {owner,repo} = context.repo();
+  const { owner, repo } = context.repo()
 
   context.github.checks.create({
     owner: owner,
@@ -93,32 +90,32 @@ create_check_run = (context) => {
   })
 }
 
-initiate_check_run = async (context) => {
-  const {owner,repo} = context.repo();
-  const check_run_id = context.payload.check_run.id;
+const initiateCheckRun = async (context) => {
+  const { owner, repo } = context.repo()
+  const checkRunId = context.payload.check_run.id
 
   context.github.checks.update({
     owner: owner,
     repo: repo,
-    check_run_id:check_run_id,
+    check_run_id: checkRunId,
     status: 'in_progress',
     started_at: new Date().toISOString()
   })
 
-  let status_response = await veracode_api.getStatus('38e46921-3ba5-4dd3-8d05-0414d4556f33',"791009");
-  console.log(status_response);
+  const statusResponse = await veracodeApi.getStatus('38e46921-3ba5-4dd3-8d05-0414d4556f33', '791009')
+  console.log(statusResponse)
 
   context.github.checks.update({
     owner: owner,
     repo: repo,
-    check_run_id:check_run_id,
+    check_run_id: checkRunId,
     status: 'completed',
     completed_at: new Date().toISOString(),
-    conclusion: status_response.conclusion,
-    details_url: status_response.details_url,
+    conclusion: statusResponse.conclusion,
+    details_url: statusResponse.details_url,
     output: {
-      summary:status_response.output_summary,
-      title: "Veracode SAST scan results"
+      summary: statusResponse.output_summary,
+      title: 'Veracode SAST scan results'
     }
   })
 }
