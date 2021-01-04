@@ -18,6 +18,6 @@ If you have suggestions for how veracode-app could be improved, or want to repor
 
 For more, check out the [Contributing Guide](CONTRIBUTING.md).
 
-## License
+## License 
 
 [ISC](LICENSE) © 2020 Yaakov Lerer <coby_lerer@hotmail.com>
